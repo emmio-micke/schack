@@ -16,3 +16,7 @@
     grid-template-columns: repeat(8, 100px);
     grid-template-rows: repeat(8, 100px);
 }
+
+.selected_piece {
+    border: 5px dashed red;
+}

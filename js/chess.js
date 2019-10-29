@@ -3,10 +3,11 @@ class Game {
         this.turn = null;
         this.pieces_black = [];
         this.pieces_white = [];
-        this.board = null;
+        this.board = Array(8).fill(Array(8));
+        this.selected_piece = null;
 
         this.drawGameBoard();
-        this.setupPieces();
+        this.setupGame();
     }
 
     drawGameBoard() {
@@ -24,23 +25,49 @@ class Game {
         }
     }
 
+    movePiece(target) {
+        
+    }
+
+    setupGame () {
+        this.setupPieces();
+
+        $(".container div").on("click", function () {
+            if (this.selected_piece !== null) {
+                console.log($(this).attr("id"));
+            }
+        });
+
+        // Add eventlisteners to watch for selected pieces.
+        $(".piece").on("click", function() {
+            if (this.selected_piece == null) {
+                this.selected_piece = $(this);
+                $(".selected_piece").removeClass("selected_piece");
+                $(this).parent().addClass("selected_piece");
+            } else {
+                this.selected_piece = null;
+                $(this).parent().removeClass("selected_piece");
+            }
+        });
+    }
+
     setupPieces() {
-        this.pieces_white.push(new Piece ("rook", "b", "A8"));
-        this.pieces_white.push(new Piece ("knight", "b", "B8"));
-        this.pieces_white.push(new Piece ("bishop", "b", "C8"));
-        this.pieces_white.push(new Piece ("queen", "b", "D8"));
-        this.pieces_white.push(new Piece ("king", "b", "E8"));
-        this.pieces_white.push(new Piece ("bishop", "b", "F8"));
-        this.pieces_white.push(new Piece ("knight", "b", "G8"));
-        this.pieces_white.push(new Piece ("rook", "b", "H8"));
-        this.pieces_white.push(new Piece ("pawn", "b", "A7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "B7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "C7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "D7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "E7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "F7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "G7"));
-        this.pieces_white.push(new Piece ("pawn", "b", "H7"));
+        this.pieces_black.push(new Piece ("rook", "b", "A8"));
+        this.pieces_black.push(new Piece ("knight", "b", "B8"));
+        this.pieces_black.push(new Piece ("bishop", "b", "C8"));
+        this.pieces_black.push(new Piece ("queen", "b", "D8"));
+        this.pieces_black.push(new Piece ("king", "b", "E8"));
+        this.pieces_black.push(new Piece ("bishop", "b", "F8"));
+        this.pieces_black.push(new Piece ("knight", "b", "G8"));
+        this.pieces_black.push(new Piece ("rook", "b", "H8"));
+        this.pieces_black.push(new Piece ("pawn", "b", "A7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "B7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "C7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "D7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "E7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "F7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "G7"));
+        this.pieces_black.push(new Piece ("pawn", "b", "H7"));
 
         this.pieces_white.push(new Piece ("pawn", "w", "A2"));
         this.pieces_white.push(new Piece ("pawn", "w", "B2"));
@@ -78,9 +105,10 @@ class Piece {
 
     placePiece() {
         let img_position = "#" + this.position_x + this.position_y;
-    
+
         $( "<img>", {
-            "src": this.image
+            "src": this.image,
+            "class": "piece"
         }).appendTo(img_position);
     }    
 }
