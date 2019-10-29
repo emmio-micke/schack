@@ -13,6 +13,17 @@ function drawGameBoard() {
     }
 }
 
+function placePiece(piece, color, position) {
+    let image = "images/" + color + "_" + piece + ".png";
+
+    let img_position = "#" + position;
+
+    $( "<img>", {
+        "src": image
+    }).appendTo(img_position);
+}
+
 $(document).ready(function () {
     drawGameBoard();
+    placePiece("queen", "w", "D1");
 });
