@@ -98,12 +98,15 @@ class Game {
      */
     movePiece(from, to) {
         let piece = this.board[from.x][from.y];
-        this.board[from.x][from.y] = null;
-        this.board[to.x][to.y] = piece;
 
-        // Remove selected class from every piece.
-        $(".selected_piece").removeClass("selected_piece");
-        this.drawPieces();
+        if (piece.checkMove(from, to)) {
+            this.board[from.x][from.y] = null;
+            this.board[to.x][to.y] = piece;
+
+            // Remove selected class from every piece.
+            $(".selected_piece").removeClass("selected_piece");
+            this.drawPieces();
+        }
     }
 
     setupGame() {
@@ -185,6 +188,30 @@ class Piece {
 class Pawn extends Piece {
     constructor(color) {
         super("pawn", color);
+    }
+
+    checkMove(from, to) {
+        let firstRow = this.color == "w" ? 6 : 1;
+        let moveOk = true;
+
+        // Check that move is in same column.
+        moveOk = moveOk && (from.x == to.x);
+
+        // Check that direction is ok.
+        if (this.color == "w") {
+            moveOk = moveOk && (from.y > to.y);
+        } else {
+            moveOk = moveOk && (from.y < to.y);
+        }
+
+        // Check that move is one steps if row is not the starting row.
+        if (from.y == firstRow) {
+            moveOk = moveOk && Math.abs(to.y - from.y) <= 2;
+        } else {
+            moveOk = moveOk && Math.abs(to.y - from.y) == 1;
+        }
+
+        return moveOk;
     }
 }
 
