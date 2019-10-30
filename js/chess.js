@@ -136,39 +136,39 @@ class Game {
      * Sets the startup pieces for a game.
      */
     setupPieces() {
-        this.addPiece(new Piece("rook", "b"), "A8");
-        this.addPiece(new Piece("knight", "b"), "B8");
-        this.addPiece(new Piece("bishop", "b"), "C8");
-        this.addPiece(new Piece("queen", "b"), "D8");
-        this.addPiece(new Piece("king", "b"), "E8");
-        this.addPiece(new Piece("bishop", "b"), "F8");
-        this.addPiece(new Piece("knight", "b"), "G8");
-        this.addPiece(new Piece("rook", "b"), "H8");
-        this.addPiece(new Piece("pawn", "b"), "A7");
-        this.addPiece(new Piece("pawn", "b"), "B7");
-        this.addPiece(new Piece("pawn", "b"), "C7");
-        this.addPiece(new Piece("pawn", "b"), "D7");
-        this.addPiece(new Piece("pawn", "b"), "E7");
-        this.addPiece(new Piece("pawn", "b"), "F7");
-        this.addPiece(new Piece("pawn", "b"), "G7");
-        this.addPiece(new Piece("pawn", "b"), "H7");
+        this.addPiece(new Rook("b"), "A8");
+        this.addPiece(new Knight("b"), "B8");
+        this.addPiece(new Bishop("b"), "C8");
+        this.addPiece(new Queen("b"), "D8");
+        this.addPiece(new King("b"), "E8");
+        this.addPiece(new Bishop("b"), "F8");
+        this.addPiece(new Knight("b"), "G8");
+        this.addPiece(new Rook("b"), "H8");
+        this.addPiece(new Pawn("b"), "A7");
+        this.addPiece(new Pawn("b"), "B7");
+        this.addPiece(new Pawn("b"), "C7");
+        this.addPiece(new Pawn("b"), "D7");
+        this.addPiece(new Pawn("b"), "E7");
+        this.addPiece(new Pawn("b"), "F7");
+        this.addPiece(new Pawn("b"), "G7");
+        this.addPiece(new Pawn("b"), "H7");
 
-        this.addPiece(new Piece("pawn", "w"), "A2");
-        this.addPiece(new Piece("pawn", "w"), "B2");
-        this.addPiece(new Piece("pawn", "w"), "C2");
-        this.addPiece(new Piece("pawn", "w"), "D2");
-        this.addPiece(new Piece("pawn", "w"), "E2");
-        this.addPiece(new Piece("pawn", "w"), "F2");
-        this.addPiece(new Piece("pawn", "w"), "G2");
-        this.addPiece(new Piece("pawn", "w"), "H2");
-        this.addPiece(new Piece("rook", "w"), "A1");
-        this.addPiece(new Piece("knight", "w"), "B1");
-        this.addPiece(new Piece("bishop", "w"), "C1");
-        this.addPiece(new Piece("queen", "w"), "D1");
-        this.addPiece(new Piece("king", "w"), "E1");
-        this.addPiece(new Piece("bishop", "w"), "F1");
-        this.addPiece(new Piece("knight", "w"), "G1");
-        this.addPiece(new Piece("rook", "w"), "H1");
+        this.addPiece(new Pawn("w"), "A2");
+        this.addPiece(new Pawn("w"), "B2");
+        this.addPiece(new Pawn("w"), "C2");
+        this.addPiece(new Pawn("w"), "D2");
+        this.addPiece(new Pawn("w"), "E2");
+        this.addPiece(new Pawn("w"), "F2");
+        this.addPiece(new Pawn("w"), "G2");
+        this.addPiece(new Pawn("w"), "H2");
+        this.addPiece(new Rook("w"), "A1");
+        this.addPiece(new Knight("w"), "B1");
+        this.addPiece(new Bishop("w"), "C1");
+        this.addPiece(new Queen("w"), "D1");
+        this.addPiece(new King("w"), "E1");
+        this.addPiece(new Bishop("w"), "F1");
+        this.addPiece(new Knight("w"), "G1");
+        this.addPiece(new Rook("w"), "H1");
     }
 }
 
@@ -177,10 +177,44 @@ class Game {
  */
 class Piece {
     constructor(type, color) {
-        this.type = type;
         this.color = color;
-
         this.image = "images/" + color + "_" + type + ".png";
+    }
+}
+
+class Pawn extends Piece {
+    constructor(color) {
+        super("pawn", color);
+    }
+}
+
+class Rook extends Piece {
+    constructor(color) {
+        super("rook", color);
+    }
+}
+
+class Knight extends Piece {
+    constructor(color) {
+        super("knight", color);
+    }
+}
+
+class Bishop extends Piece {
+    constructor(color) {
+        super("bishop", color);
+    }
+}
+
+class King extends Piece {
+    constructor(color) {
+        super("king", color);
+    }
+}
+
+class Queen extends Piece {
+    constructor(color) {
+        super("queen", color);
     }
 }
 
