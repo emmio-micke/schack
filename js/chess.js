@@ -1,5 +1,3 @@
-var selected_piece = null;
-
 class Game {
     constructor() {
         this.turn = null;
@@ -35,6 +33,8 @@ class Game {
     drawPieces() {
         let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
+        $(".container div").empty();
+
         for (let y = 0; y <= 7; y++) {
             for (let x = 0; x <= 7; x++) {
                 let square_info = this.board[x][y];
@@ -49,39 +49,29 @@ class Game {
     }
 
     handleGame() {
+        let _this = this;
         $(".container div").on("click", function () {
-            //selected_piece.appendTo($(this));
-            //console.log($(this).attr("id"));
             if ($(this).children().length > 0) {
                 $(".selected_piece").removeClass("selected_piece");
-                selected_piece = $(this);
+                _this.selected_piece = $(this);
                 $(this).addClass("selected_piece");
-            } else if (selected_piece != null) {
-                //console.log("Move from: " + selected_piece.attr("id") + " to: " + $(this).attr("id"));
-                // _self.movePiece(selected_piece.attr("id"), $(this).attr("id"));
-                let from = selected_piece.attr("id");
+            } else if (_this.selected_piece != null) {
+                let from = _this.selected_piece.attr("id");
                 let to = $(this).attr("id");
-                //console.log("from: " + from);
-                //console.log("to: " + to);
-                indexFrom = this.positionToIndex(from);
-                indexIndex = this.positionToIndex(to);
-
-                this.movePiece(indexFrom, indexTo);
-                /*
-                $("#" + from + " img.piece").appendTo("#" + to);
-                $(".selected_piece").removeClass("selected_piece");
-                */
+                let indexFrom = _this.positionToIndex(from);
+                let indexTo = _this.positionToIndex(to);
+                _this.movePiece(indexFrom, indexTo);
             }
         });
     }
 
     movePiece(from, to) {
-        console.log("from: " + from);
-        console.log("to: " + to);
-        /*
-        let position = "#" + e.target.parentElement.id;
-        $(".selected_piece").appendTo($(position));
-        */
+        let piece = this.board[from.x][from.y];
+        this.board[from.x][from.y] = null;
+        this.board[to.x][to.y] = piece;
+
+        $(".selected_piece").removeClass("selected_piece");
+        this.drawPieces();
     }
 
     setupGame() {
@@ -96,6 +86,10 @@ class Game {
         return { x: pos_x, y: pos_y }
     }
 
+    /*
+     * piece: object
+     * position: string
+     */
     addPiece(piece, position) {
         let index = this.positionToIndex(position);
         this.board[index.x][index.y] = piece;
