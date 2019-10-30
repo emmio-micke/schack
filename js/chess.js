@@ -1,3 +1,6 @@
+/*
+ * Handles the game with boards and pieces.
+ */
 class Game {
     constructor() {
         this.turn = null;
@@ -14,14 +17,22 @@ class Game {
         this.handleGame();
     }
 
+    /*
+     * Draws the chess board.
+     */
     drawGameBoard() {
+        // Chess squares are in format A8 for top left square to H1 for bottom right.
         let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
+        // Loop through rows and columns.
         for (let y = 8; y >= 1; y--) {
+            // Start row with alternate black/white square.
             let cell_class = y % 2 == 0 ? "cellBlack" : "cellWhite";
             for (let x = 0; x <= 7; x++) {
+                // Switch square color so they alternate.
                 cell_class = cell_class == "cellBlack" ? "cellWhite" : "cellBlack";
 
+                // Add div representing square.
                 $("<div>", {
                     "class": "cell " + cell_class,
                     id: columns[x] + y
@@ -30,13 +41,20 @@ class Game {
         }
     }
 
+    /*
+     * Draws the pieces and add them to the correct place on the board.
+     */
     drawPieces() {
+        // Chess squares are in format A8 for top left square to H1 for bottom right.
         let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
+        // Remove all current pieces.
         $(".container div").empty();
 
+        // Loop through board.
         for (let y = 0; y <= 7; y++) {
             for (let x = 0; x <= 7; x++) {
+                // If current square contains a piece, add it to the board.
                 let square_info = this.board[x][y];
                 if (square_info instanceof Piece) {
                     $("<img>", {
@@ -48,28 +66,42 @@ class Game {
         }
     }
 
+    /*
+     * Adds necessary event listeners for managing the user interactions.
+     */
     handleGame() {
         let _this = this;
+
+        // Click event listener for each square, reagardless of wether it holds a piece.
         $(".container div").on("click", function () {
+            // If the clicked square contains a piece then select it.
             if ($(this).children().length > 0) {
                 $(".selected_piece").removeClass("selected_piece");
                 _this.selected_piece = $(this);
                 $(this).addClass("selected_piece");
+            // If user has previously selected a piece then move it.
             } else if (_this.selected_piece != null) {
                 let from = _this.selected_piece.attr("id");
                 let to = $(this).attr("id");
                 let indexFrom = _this.positionToIndex(from);
                 let indexTo = _this.positionToIndex(to);
+
                 _this.movePiece(indexFrom, indexTo);
             }
         });
     }
 
+    /*
+     * Move piece from a square to another.
+     * from: object: x int, y int
+     * to: object: x int, y int
+     */
     movePiece(from, to) {
         let piece = this.board[from.x][from.y];
         this.board[from.x][from.y] = null;
         this.board[to.x][to.y] = piece;
 
+        // Remove selected class from every piece.
         $(".selected_piece").removeClass("selected_piece");
         this.drawPieces();
     }
@@ -78,6 +110,10 @@ class Game {
         this.setupPieces();
     }
 
+    /*
+     * Converts a position from chess notation (A8) to coordinates
+     * in multiple array (object: x int, y int).
+     */
     positionToIndex(position) {
         let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
         let pos_x = columns.indexOf(position.substring(0, 1));
@@ -87,6 +123,7 @@ class Game {
     }
 
     /*
+     * Adds a piece to the board array.
      * piece: object
      * position: string
      */
@@ -95,6 +132,9 @@ class Game {
         this.board[index.x][index.y] = piece;
     }
 
+    /*
+     * Sets the startup pieces for a game.
+     */
     setupPieces() {
         this.addPiece(new Piece("rook", "b"), "A8");
         this.addPiece(new Piece("knight", "b"), "B8");
@@ -132,21 +172,15 @@ class Game {
     }
 }
 
+/*
+ * Describes a chess piece.
+ */
 class Piece {
     constructor(type, color) {
         this.type = type;
         this.color = color;
 
         this.image = "images/" + color + "_" + type + ".png";
-    }
-
-    placePiece() {
-//        let img_position = "#" + this.position_x + this.position_y;
-
-        $("<img>", {
-            "src": this.image,
-            "class": "piece"
-        }).appendTo(img_position);
     }
 }
 
