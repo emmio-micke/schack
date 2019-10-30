@@ -3,7 +3,6 @@ var selected_piece = null;
 class Game {
     constructor() {
         this.turn = null;
-        //this.board = Array(8).fill(Array(8).fill(null));
         this.board = new Array(8);
         for (let i=0; i < 8; i++) {
             this.board[i] = new Array(8);
@@ -13,6 +12,8 @@ class Game {
 
         this.setupGame();
         this.drawGameBoard();
+        this.drawPieces();
+        this.handleGame();
     }
 
     drawGameBoard() {
@@ -23,46 +24,68 @@ class Game {
             for (let x = 0; x <= 7; x++) {
                 cell_class = cell_class == "cellBlack" ? "cellWhite" : "cellBlack";
 
-                let square = $("<div>", {
+                $("<div>", {
                     "class": "cell " + cell_class,
                     id: columns[x] + y
-                });
-
-                let square_info = this.board[x][8 - y];
-                if (square_info instanceof Piece) {
-                    $("<img>", {
-                        "src": square_info.image,
-                        "class": "piece"
-                    }).appendTo(square);
-                }
-                square.appendTo(".container");
+                }).appendTo(".container");
             }
         }
     }
 
-    movePiece(e) {
+    drawPieces() {
+        let columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+        for (let y = 0; y <= 7; y++) {
+            for (let x = 0; x <= 7; x++) {
+                let square_info = this.board[x][y];
+                if (square_info instanceof Piece) {
+                    $("<img>", {
+                        "src": square_info.image,
+                        "class": "piece"
+                    }).appendTo($("#" + columns[x] + (8 - y)));
+                }
+            }
+        }
+    }
+
+    handleGame() {
+        $(".container div").on("click", function () {
+            //selected_piece.appendTo($(this));
+            //console.log($(this).attr("id"));
+            if ($(this).children().length > 0) {
+                $(".selected_piece").removeClass("selected_piece");
+                selected_piece = $(this);
+                $(this).addClass("selected_piece");
+            } else if (selected_piece != null) {
+                //console.log("Move from: " + selected_piece.attr("id") + " to: " + $(this).attr("id"));
+                // _self.movePiece(selected_piece.attr("id"), $(this).attr("id"));
+                let from = selected_piece.attr("id");
+                let to = $(this).attr("id");
+                //console.log("from: " + from);
+                //console.log("to: " + to);
+                indexFrom = this.positionToIndex(from);
+                indexIndex = this.positionToIndex(to);
+
+                this.movePiece(indexFrom, indexTo);
+                /*
+                $("#" + from + " img.piece").appendTo("#" + to);
+                $(".selected_piece").removeClass("selected_piece");
+                */
+            }
+        });
+    }
+
+    movePiece(from, to) {
+        console.log("from: " + from);
+        console.log("to: " + to);
+        /*
         let position = "#" + e.target.parentElement.id;
         $(".selected_piece").appendTo($(position));
+        */
     }
 
     setupGame() {
         this.setupPieces();
-
-        $(".container div").on("click", function () {
-            selected_piece.appendTo($(this));
-        });
-
-        // Add eventlisteners to watch for selected pieces.
-        $(".piece").on("click", function () {
-            if (selected_piece == null) {
-                selected_piece = $(this);
-                $(".selected_piece").removeClass("selected_piece");
-                $(this).parent().addClass("selected_piece");
-            } else {
-                selected_piece = null;
-                $(this).parent().removeClass("selected_piece");
-            }
-        });
     }
 
     positionToIndex(position) {
