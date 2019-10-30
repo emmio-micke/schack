@@ -3,7 +3,7 @@
  */
 class Game {
     constructor() {
-        this.turn = null;
+        this.turn = "w";
         this.board = new Array(8);
         for (let i=0; i < 8; i++) {
             this.board[i] = new Array(8);
@@ -66,6 +66,12 @@ class Game {
         }
     }
 
+    // Get any piece for a position.
+    getPiece(position) {
+        let index = this.positionToIndex(position);
+        return this.board[index.x][index.y];
+    }
+
     /*
      * Adds necessary event listeners for managing the user interactions.
      */
@@ -74,8 +80,11 @@ class Game {
 
         // Click event listener for each square, reagardless of wether it holds a piece.
         $(".container div").on("click", function () {
+            // Get the clicked piece, if any.
+            let piece = _this.getPiece($(this).attr('id'));
+
             // If the clicked square contains a piece then select it.
-            if ($(this).children().length > 0) {
+            if (piece instanceof Piece && piece.color == _this.turn) {
                 $(".selected_piece").removeClass("selected_piece");
                 _this.selected_piece = $(this);
                 $(this).addClass("selected_piece");
@@ -99,7 +108,7 @@ class Game {
     movePiece(from, to) {
         let piece = this.board[from.x][from.y];
 
-        if (piece.checkMove(from, to)) {
+        if (piece.checkMove(from, to, this.board)) {
             this.board[from.x][from.y] = null;
             this.board[to.x][to.y] = piece;
 
@@ -190,12 +199,22 @@ class Pawn extends Piece {
         super("pawn", color);
     }
 
-    checkMove(from, to) {
+    checkMove(from, to, board) {
         let firstRow = this.color == "w" ? 6 : 1;
         let moveOk = true;
+        let otherColor = this.color == "w" ? "b" : "w";
 
         // Check that move is in same column.
-        moveOk = moveOk && (from.x == to.x);
+        if (from.x == to.x) {
+            moveOk = moveOk && true;
+            
+            // Check if path contains any pieces.
+            let startY = this.color == "w" ? to.y : from.y + 1;
+            let endY = this.color == "w" ? from.y - 1 : to.y;
+            for (let i = startY; i <= endY; i++) {
+                moveOk = moveOk && !(board[from.x][i] instanceof Piece);
+            }
+        }
 
         // Check that direction is ok.
         if (this.color == "w") {
@@ -209,6 +228,13 @@ class Pawn extends Piece {
             moveOk = moveOk && Math.abs(to.y - from.y) <= 2;
         } else {
             moveOk = moveOk && Math.abs(to.y - from.y) == 1;
+        }
+
+        // Check if pawn is trying to take out a piece of
+        // the other color.
+        if (Math.abs(from.x - to.x) == 1 && Math.abs(from.y - to.y) == 1) {
+            let piece = board[to.x][to.y];
+            moveOk = moveOk && piece.color == otherColor;
         }
 
         return moveOk;
